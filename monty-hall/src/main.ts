@@ -158,9 +158,14 @@ class PlayerConsistent extends Player {
 
 function init() {
     let player: Player = new PlayerConsistent(true);
+    let player2: Player = new PlayerConsistent(false);
 
-    for (let i = 0; i < 1000; i++)
+    for (let i = 0; i < 100000; i++)
+    {
         player.playGame(new Game(3));
+        player2.playGame(new Game(3));
+    }
 
-    document.writeln(player.rewardsWon + " / " + player.playedGames + " games won.");
+    document.writeln("Player that opts to pick again: " + player.rewardsWon + " / " + player.playedGames + " games won.<br />");
+    document.writeln("Player that sticks to its initial choice: " + player2.rewardsWon + " / " + player2.playedGames + " games won.<br />");
 }
