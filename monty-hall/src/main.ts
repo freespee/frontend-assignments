@@ -156,7 +156,7 @@ class PlayerConsistent extends Player {
     }
 }
 
-function init() {
+function playGames() {
     let player: Player = new PlayerConsistent(true);
     let player2: Player = new PlayerConsistent(false);
 
@@ -166,6 +166,8 @@ function init() {
         player2.playGame(new Game(3));
     }
 
-    document.writeln("Player that opts to pick again: " + player.rewardsWon + " / " + player.playedGames + " games won.<br />");
-    document.writeln("Player that sticks to its initial choice: " + player2.rewardsWon + " / " + player2.playedGames + " games won.<br />");
+    let e : HTMLElement = document.getElementById("output");
+
+    e.innerHTML += "Player that opts to pick again: " + player.rewardsWon + " / " + player.playedGames + " games won.<br />";
+    e.innerHTML += "Player that sticks to its initial choice: " + player2.rewardsWon + " / " + player2.playedGames + " games won.<br />";
 }
