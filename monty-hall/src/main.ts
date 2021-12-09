@@ -156,18 +156,44 @@ class PlayerConsistent extends Player {
     }
 }
 
-function playGames() {
+function getIntFromInput(name: string) : number {
+    let element : HTMLInputElement = document.getElementById(name) as HTMLInputElement;
+    let value = element.value;
+    let number = parseInt(value);
+
+    if (isNaN(number))
+        throw new Error("Couldn't parse the value of the element in " + name + ".");
+
+    return number;
+}
+
+function playGames() : void {
+    let output : HTMLElement = document.getElementById("output");
+
+    try {
+        let result : string[] = simulateGames();
+        output.innerHTML = result.join("<br />");
+    } catch(err) {
+        output.innerHTML = "ERROR: " + err;
+    }
+}
+
+function simulateGames() : string[] {
+    let iterations : number = getIntFromInput("iterationCount");
+    let boxes : number = getIntFromInput("boxCount");
+    let hostReveal: number = getIntFromInput("revealCount");
+
     let player: Player = new PlayerConsistent(true);
     let player2: Player = new PlayerConsistent(false);
 
-    for (let i = 0; i < 100000; i++)
+    for (let i = 0; i < iterations; i++)
     {
-        player.playGame(new Game(3));
-        player2.playGame(new Game(3));
+        player.playGame(new Game(boxes, hostReveal));
+        player2.playGame(new Game(boxes, hostReveal));
     }
 
-    let e : HTMLElement = document.getElementById("output");
-
-    e.innerHTML += "Player that opts to pick again: " + player.rewardsWon + " / " + player.playedGames + " games won.<br />";
-    e.innerHTML += "Player that sticks to its initial choice: " + player2.rewardsWon + " / " + player2.playedGames + " games won.<br />";
+    return [
+        "Player that opts to pick again: " + player.rewardsWon + " / " + player.playedGames + " games won.",
+        "Player that sticks to its initial choice: " + player2.rewardsWon + " / " + player2.playedGames + " games won."
+    ];
 }
