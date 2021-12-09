@@ -12,7 +12,7 @@ class Game {
     private readonly boxes : Box[];
     pickedIndex : number;
 
-    constructor(public boxCount: number) {
+    constructor(public boxCount: number, private readonly hostRevealCount = 1) {
         let prizeIndex = Math.floor(Math.random() * boxCount);
 
         this.boxes = Array(boxCount);
@@ -30,7 +30,12 @@ class Game {
         this.pickedIndex = id;
     }
 
-    public hostBoxReveal() : number {
+    public hostBoxReveal() : void {
+        for (let i = 0; i < this.hostRevealCount; i++)
+            this.hostRevealOneBox();
+    }
+
+    private hostRevealOneBox() : number {
         let mayReveal: Box[] = [];
 
         for (let i = 0; i < this.boxes.length; i++)
