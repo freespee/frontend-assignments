@@ -107,7 +107,8 @@ abstract class Player {
         if (boxes.length == 0)
             throw new Error("The player tried to pick a box, but there are no boxes left to pick from.");
 
-        let pick = Math.floor(Math.random() * boxes.length);
+        let pickId = Math.floor(Math.random() * boxes.length);
+        let pick = boxes[pickId];
         this.currentGame.pickBox(pick);
         return pick;
     }
