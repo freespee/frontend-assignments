@@ -67,23 +67,35 @@ class Game {
 }
 
 abstract class Player {
-    constructor(readonly game: Game) {
+    private currentGame : Game;
+
+    constructor() {
 
     }
 
-    public pickBox() : void {
+    public playGame(game: Game) {
+        this.currentGame = game;
+
+        this.pickBox();
+        game.hostBoxReveal();
+        this.repickBox();
+
+        document.writeln(game.hasPlayerWon().toString());
+    }
+
+    private pickBox() : void {
         this.pickRandomAvailableBox();
     }
 
-    public repickBox() : void {
+    private repickBox() : void {
         if (this.shouldRepickBox())
-            this.pickRandomAvailableBox(this.game.pickedIndex);
+            this.pickRandomAvailableBox(this.currentGame.pickedIndex);
     }
 
     protected abstract shouldRepickBox() : boolean;
 
     private pickRandomAvailableBox(excludeId : number = -1) {
-        let boxes : number[] = this.game.getClosedBoxIndicies();
+        let boxes : number[] = this.currentGame.getClosedBoxIndicies();
         if (excludeId != -1)
             boxes = boxes.filter(v => v != excludeId);
 
@@ -91,14 +103,14 @@ abstract class Player {
             throw new Error("The player tried to pick a box, but there are no boxes left to pick from.");
 
         let pick = Math.floor(Math.random() * boxes.length);
-        this.game.pickBox(pick);
+        this.currentGame.pickBox(pick);
         return pick;
     }
 }
 
 class PlayerConsistent extends Player {
-    constructor(game: Game, private readonly shouldRepick : boolean) {
-        super(game);
+    constructor(private readonly shouldRepick : boolean) {
+        super();
     }
 
     protected shouldRepickBox() : boolean
@@ -108,12 +120,9 @@ class PlayerConsistent extends Player {
 }
 
 function init() {
-    let game: Game = new Game(3);
-    let player: Player = new PlayerConsistent(game, true);
+    let player: Player = new PlayerConsistent(true);
 
-    player.pickBox();
-    game.hostBoxReveal();
-    player.repickBox();
-
-    document.writeln(game.hasPlayerWon().toString());
+    player.playGame(new Game(3));
+    player.playGame(new Game(3));
+    player.playGame(new Game(5));
 }
