@@ -68,9 +68,12 @@ class Game {
 
 abstract class Player {
     private currentGame : Game;
+    playedGames : number;
+    rewardsWon : number;
 
     constructor() {
-
+        this.playedGames = 0;
+        this.rewardsWon = 0;
     }
 
     public playGame(game: Game) {
@@ -80,7 +83,9 @@ abstract class Player {
         game.hostBoxReveal();
         this.repickBox();
 
-        document.writeln(game.hasPlayerWon().toString());
+        if (game.hasPlayerWon())
+            this.rewardsWon++;
+        this.playedGames++;
     }
 
     private pickBox() : void {
@@ -122,7 +127,8 @@ class PlayerConsistent extends Player {
 function init() {
     let player: Player = new PlayerConsistent(true);
 
-    player.playGame(new Game(3));
-    player.playGame(new Game(3));
-    player.playGame(new Game(5));
+    for (let i = 0; i < 1000; i++)
+        player.playGame(new Game(3));
+
+    document.writeln(player.rewardsWon + " / " + player.playedGames + " games won.");
 }
